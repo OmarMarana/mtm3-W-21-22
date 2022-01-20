@@ -22,7 +22,7 @@ def name_already_exist(dict,name):
 def readFile(file_name):
     file=open(file_name,'r')
     ship_list = []
-    tmp = []
+    current_product = []
     ship_dict ={}
     help_list=[]
     dict_price={}
@@ -40,17 +40,27 @@ def readFile(file_name):
             amount_in_warehouse[help_list[2]] += (int)(help_list[3])
         
         if help_list[0]=="ship":     #check format of ship
-            ship_list=(help_list[2]).split('--')
+            product_line = line[11:] 
+            ship_list=(product_line).split(' -- ')
             for i in ship_list:
-                tmp= i.split(',')
-                ship_dict[tmp[0]]+=tmp[1]
-            
+                current_product= i.split(', ')
+                ship_dict[current_product[0]]+=current_product[1]
+            for key in ship_dict.keys():
+                if (name_already_exist(ship_dict,key) == False) or ( ship_dict[key] > amount_in_warehouse[key]):
+                    continue
+                dict_sold_amount[key] += ship_dict[key]
+                amount_in_warehouse[key] -= ship_dict[key]
+
+                	
     # for k,v in ship_dict.items():
     
     # return [dict_price, amount_in_warehouse, dict_sold_amount]
 
 def find_k_most_expensive_products(file_name, k):
     
+    if k <=0: #check if file is empty 
+        return []
+
     dict_list = readFile(file_name)
     price_dict_val_sorted = { k : v for k, v in sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)}
     final_list = []
@@ -68,7 +78,7 @@ def find_k_most_expensive_products(file_name, k):
 
     k_most_expensive_products_list = []
     for j in range(k):
-        k_most_expensive_products_list.append(final_list(j)[0])
+        k_most_expensive_products_list.append(final_list[j][0])
 
     return k_most_expensive_products_list
 
