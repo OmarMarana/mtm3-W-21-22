@@ -29,32 +29,46 @@ def readFile(file_name):
     amount_in_warehouse={}
     dict_sold_amount={} # reset to zero 
     for line in file:
+        line = line[:-1]
         help_list = line.split( )
         if help_list[0]=="add":
-            if help_list[3]>=0 and help_list[4]>=0 and name_already_exist(amount_in_warehouse,help_list[3]) ==  False: 
-                dict_price[help_list[2]]=(int)(help_list[3])
-                amount_in_warehouse[help_list[2]]=(int)(help_list[4])
+            if (float)(help_list[3])>=0 and (float)(help_list[4])>=0 and name_already_exist(amount_in_warehouse,help_list[3]) ==  False: 
+                dict_price[help_list[2]]=(float)(help_list[3])
+                amount_in_warehouse[help_list[2]]=(float)(help_list[4])
                 dict_sold_amount[help_list[2]]=0
             
         if help_list[0]=="change":
-            amount_in_warehouse[help_list[2]] += (int)(help_list[3])
+            if name_already_exist(amount_in_warehouse,help_list[2]) ==  False:
+                continue
+            amount_in_warehouse[help_list[2]] += (float)(help_list[3])
         
         if help_list[0]=="ship":     #check format of ship
             product_line = line[11:] 
             ship_list=(product_line).split(' -- ')
             for i in ship_list:
                 current_product= i.split(', ')
-                ship_dict[current_product[0]]+=current_product[1]
-            for key in ship_dict.keys():
-                if (name_already_exist(ship_dict,key) == False) or ( ship_dict[key] > amount_in_warehouse[key]):
-                    continue
-                dict_sold_amount[key] += ship_dict[key]
-                amount_in_warehouse[key] -= ship_dict[key]
 
+                if (name_already_exist(amount_in_warehouse,current_product[0]) == False):
+                    continue
+                if(  (float)(current_product[1]) > amount_in_warehouse[current_product[0]]):
+                    continue
+                if (float)(current_product[1]) <= 0:
+                    continue
+
+                if name_already_exist(ship_dict, current_product[0]) == False:
+                    ship_dict[current_product[0]] = (float)(current_product[1])
+                else:
+                    ship_dict[current_product[0]] += (float)(current_product[1])
+                
+                dict_sold_amount[current_product[0]] += (float)(ship_dict[current_product[0]])
+                amount_in_warehouse[current_product[0]] -= (float)(ship_dict[current_product[0]])
+            
+            ship_dict = {}
+            ship_list = {}
                 	
     # for k,v in ship_dict.items():
     
-    # return [dict_price, amount_in_warehouse, dict_sold_amount]
+    return [dict_price, amount_in_warehouse, dict_sold_amount]
 
 def find_k_most_expensive_products(file_name, k):
     
@@ -62,7 +76,11 @@ def find_k_most_expensive_products(file_name, k):
         return []
 
     dict_list = readFile(file_name)
-    price_dict_val_sorted = { k : v for k, v in sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)}
+
+    if len(dict_list[0]) == 0:
+        return []
+
+    price_dict_val_sorted = { k1 : v for k1, v in sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)}
     final_list = []
     tuple_list = list(price_dict_val_sorted.items())
     i =0 
@@ -72,12 +90,15 @@ def find_k_most_expensive_products(file_name, k):
         while i < len(tuple_list) and tuple_list[i][1] ==  first_val[1] :
             tmp_dict[tuple_list[i][0]] = tuple_list[i][1]
             i += 1
-        sorted_dict = { k : v for k, v in sorted(tmp_dict.items())}
-        for k, v in sorted_dict.items():
-            final_list.append((k,v))
+        sorted_dict = { k1 : v for k1, v in sorted(tmp_dict.items())}
+        for k1, v in sorted_dict.items():
+            final_list.append((k1,v))
 
     k_most_expensive_products_list = []
-    for j in range(k):
+
+    num_of_products = len(dict_list[0])
+    # print(k)
+    for j in range(min((int)(k),num_of_products)):
         k_most_expensive_products_list.append(final_list[j][0])
 
     return k_most_expensive_products_list
