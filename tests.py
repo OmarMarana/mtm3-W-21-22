@@ -1,5 +1,5 @@
-from part1 import find_k_most_expensive_products, find_best_selling_product
-# from part2 import check_match, get_palindrom_dict
+from hw3_part1 import find_k_most_expensive_products, find_best_selling_product
+from hw3_part2 import check_match, get_palindrom_dict
 
 def compare_dict1_to_dict2 (dict1, dict2):
     for key in dict1:
@@ -29,15 +29,15 @@ for most_expensive_product in most_expensive_products:
 
 compare_best_selling_product(find_best_selling_product('example1.txt'), ('carrot', 18.0))
 
-# #### Tests for second part ####
-# palindrom_dict = {1: ['A', 'b', 'b', 'A', 'c', 'a', 'B', 'B', 'a'], 2: [ 'BB', 'bb'], 4: ['AbbA', 'aBBa']}
-# res = get_palindrom_dict("AbbAcaBBa")
-# compare_dictionaries(res, palindrom_dict)
+#### Tests for second part ####
+palindrom_dict = {1: ['A', 'b', 'b', 'A', 'c', 'a', 'B', 'B', 'a'], 2: [ 'BB', 'bb'], 4: ['AbbA', 'aBBa']}
+res = get_palindrom_dict("AbbAcaBBa")
+compare_dictionaries(res, palindrom_dict)
 
-# assert check_match("dkoeoerp")
-# assert not check_match("dkoeomrp")
-# assert check_match("kdeoeopr")
-# assert not check_match("kdeoempr")
-# assert check_match("sdaadd")
-# assert not check_match("dsaadd")
-# assert not check_match("chheelcpk")
+assert check_match("dkoeoerp")
+assert not check_match("dkoeomrp")
+assert check_match("") # 
+assert not check_match("kdeoempr")
+assert check_match("sdaadd")
+assert not check_match("dsaadd")
+assert not check_match("chheelcpk") # check 

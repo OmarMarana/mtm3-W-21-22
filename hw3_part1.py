@@ -1,18 +1,5 @@
 
 
-
-# d1 = {'banana' : 10, 'apple' : 10, 'apples' : 10,  'ffff' : 11 ,'c' : 10 , 'd' : 9, 'a' : 9}
-
-# sort_d1_key = { k : v for k, v in sorted(d1.items())}
-
-# print(list(sort_d1_val.items()))
-# print(final_list)
-
-
-
-
-
-
 def name_already_exist(dict,name):
     for k in dict.keys():
         if k==name:
@@ -27,12 +14,13 @@ def readFile(file_name):
     help_list=[]
     dict_price={}
     amount_in_warehouse={}
-    dict_sold_amount={} # reset to zero 
+    dict_sold_amount={}  
     for line in file:
-        line = line[:-1]
+        if(line[-1] == '\n'):
+            line = line[:-1]
         help_list = line.split( )
         if help_list[0]=="add":
-            if (float)(help_list[3])>=0 and (float)(help_list[4])>=0 and name_already_exist(amount_in_warehouse,help_list[3]) ==  False: 
+            if (float)(help_list[3])>=0 and (float)(help_list[4])>=0 and name_already_exist(amount_in_warehouse,help_list[2]) ==  False: 
                 dict_price[help_list[2]]=(float)(help_list[3])
                 amount_in_warehouse[help_list[2]]=(float)(help_list[4])
                 dict_sold_amount[help_list[2]]=0
@@ -42,7 +30,7 @@ def readFile(file_name):
                 continue
             amount_in_warehouse[help_list[2]] += (float)(help_list[3])
         
-        if help_list[0]=="ship":     #check format of ship
+        if help_list[0]=="ship":     
             product_line = line[11:] 
             ship_list=(product_line).split(' -- ')
             for i in ship_list:
@@ -55,24 +43,19 @@ def readFile(file_name):
                 if (float)(current_product[1]) <= 0:
                     continue
 
-                if name_already_exist(ship_dict, current_product[0]) == False:
-                    ship_dict[current_product[0]] = (float)(current_product[1])
-                else:
-                    ship_dict[current_product[0]] += (float)(current_product[1])
-                
-                dict_sold_amount[current_product[0]] += (float)(ship_dict[current_product[0]])
-                amount_in_warehouse[current_product[0]] -= (float)(ship_dict[current_product[0]])
-            
+                amount_in_warehouse[current_product[0]] -= (float)(current_product[1])
+                dict_sold_amount[current_product[0]] += (float)(current_product[1])
+
+
             ship_dict = {}
             ship_list = {}
                 	
-    # for k,v in ship_dict.items():
     
     return [dict_price, amount_in_warehouse, dict_sold_amount]
 
 def find_k_most_expensive_products(file_name, k):
     
-    if k <=0: #check if file is empty 
+    if k <=0: 
         return []
 
     dict_list = readFile(file_name)
@@ -97,7 +80,6 @@ def find_k_most_expensive_products(file_name, k):
     k_most_expensive_products_list = []
 
     num_of_products = len(dict_list[0])
-    # print(k)
     for j in range(min((int)(k),num_of_products)):
         k_most_expensive_products_list.append(final_list[j][0])
 
@@ -107,7 +89,6 @@ def find_best_selling_product(file_name):
     list_best_selling = []
     dict_list = readFile(file_name)
     max_sold_price=0
-    # return [dict_price, amount_in_warehouse, dict_sold_amount]
 
     for k in (dict_list[0]).keys():
         if dict_list[0][k]*dict_list[2][k] > max_sold_price:
