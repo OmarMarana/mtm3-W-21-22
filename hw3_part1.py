@@ -54,13 +54,6 @@ def readFile(file_name):
     return [dict_price, amount_in_warehouse, dict_sold_amount]
 
 
-def bubbleSort(list):
-    
-    n = len(list)
-    for i in range(n-1):
-        for j in range(0, n-i-1):
-            if list[j][1] > list[j + 1][1] :
-                list[j], list[j + 1] = list[j + 1], list[j]
 
 
 
@@ -74,30 +67,25 @@ def find_k_most_expensive_products(file_name, k):
     if len(dict_list[0]) == 0:
         return []
 
-    # price_dict_val_sorted = { k1 : v for k1, v in sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)}
+    tuple_list_sorted_by_price_and_names = []
+    tuple_list_sorted_by_price = sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)
 
-
-    final_list = []
-    tuple_list = list(dict_list[0].items())
-    bubbleSort(tuple_list)
-    tuple_list.reverse()
 
     i =0 
-    while i < len(tuple_list):
-        first_val = tuple_list[i] 
-        tmp_dict = {}
-        while i < len(tuple_list) and tuple_list[i][1] ==  first_val[1] :
-            tmp_dict[tuple_list[i][0]] = tuple_list[i][1]
+    while i < len(tuple_list_sorted_by_price):
+        first_val = tuple_list_sorted_by_price[i] 
+        items_with_same_price = {}
+        while i < len(tuple_list_sorted_by_price) and tuple_list_sorted_by_price[i][1] ==  first_val[1] :
+            items_with_same_price[tuple_list_sorted_by_price[i][0]] = tuple_list_sorted_by_price[i][1]
             i += 1
-        sorted_dict = { k1 : v for k1, v in sorted(tmp_dict.items())}
-        for k1, v in sorted_dict.items():
-            final_list.append((k1,v))
+        for k1, v in sorted(items_with_same_price.items()):
+            tuple_list_sorted_by_price_and_names.append((k1,v))
 
     k_most_expensive_products_list = []
 
     num_of_products = len(dict_list[0])
     for j in range(min((int)(k),num_of_products)):
-        k_most_expensive_products_list.append(final_list[j][0])
+        k_most_expensive_products_list.append(tuple_list_sorted_by_price_and_names[j][0])
 
     return k_most_expensive_products_list
 
