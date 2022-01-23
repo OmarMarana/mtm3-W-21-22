@@ -41,3 +41,4 @@ assert not check_match("kdeoempr")
 assert check_match("sdaadd")
 assert not check_match("dsaadd")
 assert not check_match("chheelcpk") # check 
+print("success")

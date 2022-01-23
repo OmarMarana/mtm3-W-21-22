@@ -50,8 +50,19 @@ def readFile(file_name):
             ship_dict = {}
             ship_list = {}
                 	
-    
+    file.close()
     return [dict_price, amount_in_warehouse, dict_sold_amount]
+
+
+def bubbleSort(list):
+    
+    n = len(list)
+    for i in range(n-1):
+        for j in range(0, n-i-1):
+            if list[j][1] > list[j + 1][1] :
+                list[j], list[j + 1] = list[j + 1], list[j]
+
+
 
 def find_k_most_expensive_products(file_name, k):
     
@@ -63,9 +74,14 @@ def find_k_most_expensive_products(file_name, k):
     if len(dict_list[0]) == 0:
         return []
 
-    price_dict_val_sorted = { k1 : v for k1, v in sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)}
+    # price_dict_val_sorted = { k1 : v for k1, v in sorted(dict_list[0].items(), key = lambda v: v[1], reverse=True)}
+
+
     final_list = []
-    tuple_list = list(price_dict_val_sorted.items())
+    tuple_list = list(dict_list[0].items())
+    bubbleSort(tuple_list)
+    tuple_list.reverse()
+
     i =0 
     while i < len(tuple_list):
         first_val = tuple_list[i] 
